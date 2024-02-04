@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "packages": {
+    "com.ptc.vuforia.engine": {
+      "tarball": {
+        "hash": "e5885903f78d",
+        "mtime": 1704806779000,
+        "size": 140323298,
+        "localPath": "C:\\Users\\bento\\ARColoring\\Packages\\com.ptc.vuforia.engine-10.20.3.tgz"
+      }
+    }
+  }
+}
