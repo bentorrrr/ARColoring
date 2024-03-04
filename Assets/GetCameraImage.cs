@@ -73,12 +73,7 @@ public class GetCameraImage : MonoBehaviour
         // There can be a delay of several frames until the camera image becomes available
         if (Image.IsNullOrEmpty(image))
             return;
-
-        Debug.Log("\nImage Format: " + image.PixelFormat +
-                  "\nImage Size: " + image.Width + " x " + image.Height +
-                  "\nBuffer Size: " + image.BufferWidth + " x " + image.BufferHeight +
-                  "\nImage Stride: " + image.Stride + "\n");
-
+        
         // Override the current texture by copying into it the camera image flipped on the Y axis
         // The texture is resized to match the camera image size
         image.CopyToTexture(mTexture, true);
@@ -96,14 +91,10 @@ public class GetCameraImage : MonoBehaviour
         var success = VuforiaBehaviour.Instance.CameraDevice.SetFrameFormat(PIXEL_FORMAT, true);
         if (success)
         {
-            Debug.Log("Successfully registered pixel format " + PIXEL_FORMAT);
             mFormatRegistered = true;
         }
         else
         {
-            Debug.LogError("Failed to register pixel format " + PIXEL_FORMAT +
-                           "\n the format may be unsupported by your device;" +
-                           "\n consider using a different pixel format.");
             mFormatRegistered = false;
         }
     }
@@ -113,7 +104,6 @@ public class GetCameraImage : MonoBehaviour
     /// 
     void UnregisterFormat()
     {
-        Debug.Log("Unregistering camera pixel format " + PIXEL_FORMAT);
         VuforiaBehaviour.Instance.CameraDevice.SetFrameFormat(PIXEL_FORMAT, false);
         mFormatRegistered = false;
     }
