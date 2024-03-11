@@ -19,7 +19,7 @@ public class UvMapping : MonoBehaviour
     public List<GameObject> Coord = new List<GameObject>(); // 0 = LowerLeft, 1 = LowerRight, 2 = UpperRight, 3 = UpperLeft
     
     private int[,] Permutation = {{-1,-1}, {1,-1}, {1,1}, {-1,1}};
-    // Update is called once per frame
+    
     void Start()
     {
         cam = MainCam.GetComponent<Camera>();
@@ -42,7 +42,6 @@ public class UvMapping : MonoBehaviour
         #region Calculating Projection
         for( int i = 0; i < 4; i++)
         {
-            // Debug.Log(cam.WorldToScreenPoint(Coord[i].transform.position));
             var temp = cam.WorldToScreenPoint(Coord[i].transform.position);
             temp.x = temp.x / (Screen.width/192);
             temp.y = temp.y / (Screen.height/108);
@@ -95,11 +94,9 @@ public class UvMapping : MonoBehaviour
         float minY = Mathf.Min(coords[0].y, coords[1].y, coords[2].y, coords[3].y);
         float maxY = Mathf.Max(coords[0].y, coords[1].y, coords[2].y, coords[3].y);
 
-        // Calculate the width and height of the rectangle
         float width = maxX - minX;
         float height = maxY - minY;
 
-        // Create and return the Rect
         return new Rect(minX, minY, width, height);
     }
 
