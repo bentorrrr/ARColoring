@@ -6,16 +6,19 @@ using Vuforia;
 using Image = Vuforia.Image;
 
 public class UvMapping : MonoBehaviour
-{
+{  
     public GameObject RawIm;
+    public GameObject TextureIm;
     public GameObject ImageTarget;
     public GameObject MainCam;
+    public GameObject img;
     private Camera cam;
     private Texture ExtractedTexture;
     public float imageHeight, imageWidth;
     public SkinnedMeshRenderer Renderer;
     private Matrix4x4 originalProjection, inversedProjection;
     private List<Vector2> Coord2D = new List<Vector2>();
+    private List<Vector3> Coord3D = new List<Vector3>();
     public List<GameObject> Coord = new List<GameObject>(); // 0 = LowerLeft, 1 = LowerRight, 2 = UpperRight, 3 = UpperLeft
     
     private int[,] Permutation = {{-1,-1}, {1,-1}, {1,1}, {-1,1}};
@@ -25,7 +28,7 @@ public class UvMapping : MonoBehaviour
         cam = MainCam.GetComponent<Camera>();
         originalProjection = cam.projectionMatrix;
         inversedProjection = originalProjection.inverse;
-       
+
         for( int i = 0; i < 4; i++)
         {
             Debug.Log(cam.WorldToScreenPoint(Coord[i].transform.position));
@@ -34,7 +37,7 @@ public class UvMapping : MonoBehaviour
     }
 
     void Update()
-    {
+    {        
         for( int i = 0; i < 4; i++)
         {
             Coord[i].transform.position = new Vector3(ImageTarget.transform.position.x + (imageWidth * Permutation[i,0] * 0.0001f), ImageTarget.transform.position.y, ImageTarget.transform.position.z + (imageHeight * Permutation[i,1] * 0.0001f));
@@ -43,27 +46,30 @@ public class UvMapping : MonoBehaviour
         for( int i = 0; i < 4; i++)
         {
             var temp = cam.WorldToScreenPoint(Coord[i].transform.position);
-            temp.x = temp.x / (Screen.width/192);
-            temp.y = temp.y / (Screen.height/108);
-            Debug.Log(temp);
+            temp.x = temp.x ; // / (Screen.width);
+            temp.y = temp.y ; // / (Screen.height);
+            Debug.Log("Temp Value: " + temp);
+            Debug.Log("Temp Diveded: " + temp.x/640 + " " + temp.y/480);
             Coord2D.Insert(i, new Vector2(temp.x, temp.y));
         }
         #endregion
         
         for( int i = 0; i < 4; i++)
         {
-            if(Coord2D[i].x < 0 || Coord2D[i].x > 192 || Coord2D[i].y < 0 || Coord2D[i].y > 108)
-            {
-                return;
-            }          
             RawImage rawImage = RawIm.GetComponent<RawImage>();
-            Texture2D texture = new Texture2D((int)rawImage.rectTransform.rect.width, (int)rawImage.rectTransform.rect.height);
+            Texture2D texture = (rawImage.texture as Texture2D);
+            texture.Reinitialize(1920,1080);
+            Debug.Log("Texture Size: " + texture.width + " " + texture.height);
+            RawImage TextIm = TextureIm.GetComponent<RawImage>();
+            TextIm.texture = texture;
+            TextIm.material.mainTexture = texture;
             var Rectangle = RectFromCoordinates(Coord2D.ToArray());
-            Debug.Log(Rectangle);
-
+            //Rect Rectangle = new Rect(startX, startY, width, height);
+            Debug.Log("Rect: " + Rectangle);
             texture.ReadPixels((Rectangle), 0, 0, true);
             texture.Apply();
 
+            
             Renderer.material.mainTexture = texture;
         }
     
@@ -78,13 +84,6 @@ public class UvMapping : MonoBehaviour
         // // croppedTexture.Apply();
     }
 
-    // Texture2D RawImageToTexture2D(RawImage rawImage)
-    // {
-    //     Texture2D texture = new Texture2D((int)rawImage.rectTransform.rect.width, (int)rawImage.rectTransform.rect.height);
-    //     texture.ReadPixels(new Rect(0, 0, rawImage.rectTransform.rect.width, rawImage.rectTransform.rect.height), 0, 0);
-    //     texture.Apply();
-    //     return texture;
-    // }
 
     Rect RectFromCoordinates(Vector2[] coords)
     {
