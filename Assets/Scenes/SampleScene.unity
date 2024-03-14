@@ -2598,7 +2598,6 @@ MonoBehaviour:
   TextureIm: {fileID: 1160774355}
   ImageTarget: {fileID: 1833575598}
   MainCam: {fileID: 1138173231}
-  img: {fileID: 0}
   imageHeight: 1024
   imageWidth: 724
   Renderer: {fileID: 4270882997514311811}
@@ -2823,7 +2822,7 @@ Transform:
   m_GameObject: {fileID: 402339052533012717}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0.2498, y: 0, z: 0}
+  m_LocalPosition: {x: 0.005, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:

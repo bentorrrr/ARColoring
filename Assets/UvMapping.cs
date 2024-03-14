@@ -11,14 +11,12 @@ public class UvMapping : MonoBehaviour
     public GameObject TextureIm;
     public GameObject ImageTarget;
     public GameObject MainCam;
-    public GameObject img;
     private Camera cam;
     private Texture ExtractedTexture;
     public float imageHeight, imageWidth;
     public SkinnedMeshRenderer Renderer;
     private Matrix4x4 originalProjection, inversedProjection;
     private List<Vector2> Coord2D = new List<Vector2>();
-    private List<Vector3> Coord3D = new List<Vector3>();
     public List<GameObject> Coord = new List<GameObject>(); // 0 = LowerLeft, 1 = LowerRight, 2 = UpperRight, 3 = UpperLeft
     
     private int[,] Permutation = {{-1,-1}, {1,-1}, {1,1}, {-1,1}};
@@ -50,26 +48,28 @@ public class UvMapping : MonoBehaviour
             temp.y = temp.y ; // / (Screen.height);
             Debug.Log("Temp Value: " + temp);
             Debug.Log("Temp Diveded: " + temp.x/640 + " " + temp.y/480);
-            Coord2D.Insert(i, new Vector2(temp.x, temp.y));
+            Coord2D.Insert(i, new Vector2(temp.x, temp.y)); // Inserting coordinates in 2D (x,y) to array
         }
         #endregion
         
         for( int i = 0; i < 4; i++)
         {
             RawImage rawImage = RawIm.GetComponent<RawImage>();
-            Texture2D texture = (rawImage.texture as Texture2D);
-            texture.Reinitialize(1920,1080);
+            Texture2D texture = (rawImage.texture as Texture2D); // Casting Texture to Texture2D
+            // texture.Reinitialize(1920,1080); // Trying to resize texture but didn't have any effect on the render texture
             Debug.Log("Texture Size: " + texture.width + " " + texture.height);
-            RawImage TextIm = TextureIm.GetComponent<RawImage>();
-            TextIm.texture = texture;
-            TextIm.material.mainTexture = texture;
+
+            //             
             var Rectangle = RectFromCoordinates(Coord2D.ToArray());
-            //Rect Rectangle = new Rect(startX, startY, width, height);
             Debug.Log("Rect: " + Rectangle);
             texture.ReadPixels((Rectangle), 0, 0, true);
             texture.Apply();
 
-            
+            // Casting an processed texture to another raw image;
+            RawImage TextIm = TextureIm.GetComponent<RawImage>();
+            TextIm.texture = texture;
+            TextIm.material.mainTexture = texture;
+
             Renderer.material.mainTexture = texture;
         }
     
